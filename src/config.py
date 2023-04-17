@@ -32,6 +32,7 @@ class Config:
         self._config['default_title'] = 'Project'
         self._config['default_template'] = 'default'
         self._config['default_git'] = False
+        self._config['default_author'] = ''
         self._save_config()
 
     def _save_config(self):
@@ -62,3 +63,7 @@ class Config:
     @property
     def default_gitignore_path(self):
         return self._default_gitignore_path
+
+    @property
+    def default_author(self):
+        return self._config.get('default_author', '')

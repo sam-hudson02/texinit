@@ -1,7 +1,6 @@
 import os
 from src.config import Config
 import shutil
-import time
 
 
 def main():
