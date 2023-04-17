@@ -20,7 +20,8 @@ An easy to use cli project initializer for your latex projects.
 
 ### Usage
 
-To create a new project use ```texinit [options] [project title]``` ie ```texinit --git --template mytemplate project1```
+To create a new project use ```texinit [options] [project title]``` ie ```texinit --git --template mytemplate project1``` \
+To access a template use the name of the file without .tex, so to access default.tex use ```texinit --template default```
 
 ## Templates
 
