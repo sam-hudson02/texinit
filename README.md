@@ -26,8 +26,8 @@ To create a new project use ```texinit [options] [project title]``` ie ```texini
 
 You the following key words in your templates and they will be replaced with the following values
 
-!title - replaced with project title - eg: ```\title{!title}```
-!author - replaced with project author - eg: ```\author{!author}```
-!date - replaced with current date in form (18 April 2023) - eg: ```\date{!date}``` 
-!month - replaced with current month in form (April) - eg ```\date{!month}```
-!year - replaced with current year in from (2023) - eg ```\date{!year}```
+!title - replaced with project title - eg: ```\title{!title}``` \
+!author - replaced with project author - eg: ```\author{!author}``` \
+!date - replaced with current date in form (18 April 2023) - eg: ```\date{!date}``` \
+!month - replaced with current month in form (April) - eg ```\date{!month}``` \
+!year - replaced with current year in from (2023) - eg ```\date{!year}``` 
