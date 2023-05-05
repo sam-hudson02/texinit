@@ -5,8 +5,8 @@ import subprocess
 from config import Config
 from datetime import date
 
-template_dir = '~/.config/texinit/templates'
-template_dir = os.path.expanduser(template_dir)
+template_dir = os.path.expanduser('~/.config/texinit/templates')
+macros_dir = os.path.expanduser('~/.config/texinit/macros')
 templates = os.listdir(template_dir)
 templates = [template.split('.')[0] for template in templates]
 
@@ -18,26 +18,18 @@ templates = [template.split('.')[0] for template in templates]
 @click.option('--git', is_flag=True, help='Initialize Git repository')
 @click.option('--author', help='Author of the project', required=False)
 def main(template, title, git, author):
-    config = Config()
-    if not title:
-        title = config.default_title
-    if not template:
-        template = config.default_template
-    if not git:
-        git = config.default_git
-    if not author:
-        author = config.default_author
+    config = Config(title=title, template=template, git=git, author=author)
 
-    click.echo('Template: ' + template)
-    click.echo('Title: ' + title)
-    click.echo('Git: ' + str(git))
-    click.echo('Author: ' + author)
+    click.echo('Template: ' + config.template)
+    click.echo('Title: ' + config.title)
+    click.echo('Git: ' + str(config.git))
+    click.echo('Author: ' + config.author)
 
-    template_path = find_template(template)
+    template_path = find_template(config.template)
     if not template_path:
         click.echo('Template not found')
         return
-    if not create_project(template_path, title, author):
+    if not create_project(config):
         return
     if git:
         init_git(title, config)
@@ -53,31 +45,47 @@ def find_template(template):
     return None
 
 
-def create_project(template_path, title, author) -> bool:
+def create_project(config: Config) -> bool:
     try:
-        os.mkdir(title)
+        os.mkdir(config.title)
     except FileExistsError:
         click.echo('Project already exists')
         return False
 
-    # Copy template files to project directory
-    shutil.copy(template_path, f'{title}/{title}.tex')
+    template_path = find_template(config.template)
 
-    # Create figures directory
-    os.chdir(title)
-    os.mkdir('figures')
+    os.chdir(config.title)
 
-    # Build project
-    build(title)
+    copy_files(template_path, config.macros, config.title)
+    create_folders(config.folders)
+    print('folders', config.folders)
+    print('macros', config.macros)
+
     os.chdir('..')
 
-    fill_template(title, author)
+    fill_template(config.title, config.author)
 
     return True
 
 
-def build(title):
-    subprocess.run(['latexmk', '-pdf', '-silent', f'{title}.tex'])
+def create_folders(folders: list):
+    for folder in folders:
+        try:
+            print(f'Creating folder {folder}')
+            os.mkdir(folder)
+        except FileExistsError:
+            click.echo(f'Folder {folder} already exists')
+
+
+def copy_files(template_path: str, macros: list, title: str):
+    for macro in macros:
+        try:
+            macro_path = os.path.join(macros_dir, macro)
+            shutil.copy(macro_path, f'{macro}')
+        except FileNotFoundError:
+            click.echo(f'Macro {macro} not found')
+
+    shutil.copy(template_path, f'{title}.tex')
 
 
 def fill_template(title, author):
